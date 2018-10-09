@@ -13,14 +13,4 @@ require 'baidupay/sign/rsa'
 require 'baidupay/client'
 
 module Baidupay
-  @debug_mode = true
-  @sign_type = 'MD5'
-
-  class << self
-    attr_accessor :pid, :key, :sign_type, :debug_mode
-
-    def debug_mode?
-      !!@debug_mode
-    end
-  end
 end

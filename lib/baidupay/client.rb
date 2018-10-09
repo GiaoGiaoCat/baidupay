@@ -11,11 +11,8 @@ module Baidupay
     end
 
     # Generate sign for params.
-    #
     # Example:
-    #
-    #   baidupay_client.sign(tp_order_id: 'NO129388445')
-    #   # => 'app_id=2016000000000000&charset=utf-8&sig....'
+    #   baidupay_client.sign(tp_order_id: 'NO129388445') #=> 'eKn5tjMLugCvU4nv9WjwIN7+AEb3l13fKUWqYMnQpkwmo+...'
     def sign(params)
       string = params_to_string(prepare_params(params))
       ::Baidupay::Sign::RSA.sign(private_key, string)
