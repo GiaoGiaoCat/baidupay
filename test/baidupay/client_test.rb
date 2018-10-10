@@ -19,4 +19,25 @@ class Baidupay::ClientTest < Minitest::Test
 
     assert_equal string, @client.sign(tp_order_id: 'NO129388445')
   end
+
+  # Use pair rsa key so we can test it
+  def test_verify
+    params = {
+      out_trade_no: '20160401000000',
+      trade_status: 'TRADE_SUCCESS',
+      rsaSign: 'gfFC+YIGUKkh6z5toQMc+T+R0ul84dYwKrPLXu8jPy1DoSPyKSlUgty3tW/HTUJToNeVpHZXBki/I+ygT1jEhK3B0QL5QDs4Bg6gtyJrrbjvPpugoekjCftwqEDH9Gd2MEltD2Fp1U4ecdmSaXiB/DlhdkRXdicT2yfmqd/3v1Q='
+    }
+
+    assert @client.verify?(params)
+  end
+
+  def test_verify_when_wrong
+    params = {
+      out_trade_no: '20160401000000',
+      trade_status: 'TRADE_SUCCESS',
+      rsaSign: Base64.strict_encode64('WrongSign')
+    }
+
+    refute @client.verify?(params)
+  end
 end

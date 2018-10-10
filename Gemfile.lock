@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    baidupay (0.1.0)
+    baidupay (0.1.1)
 
 GEM
   remote: https://rubygems.org/
