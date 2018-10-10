@@ -1,8 +1,8 @@
 # Baidupay
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/baidupay`. To experiment with that code, run `bin/console` for an interactive prompt.
+百度商户平台支付 ruby gem。使用之前请先阅读 https://dianshang.baidu.com/platform/doclist/index.html#!/home
 
-TODO: Delete this and the text above, and describe your gem
+**注：所有代码均魔改自 Rei 的 [alipay](https://github.com/chloerei/alipay)，因百度电商平台功能比较少，所以代码砍了很多。**
 
 ## Installation
 
@@ -14,30 +14,50 @@ gem 'baidupay'
 
 And then execute:
 
-    $ bundle
+```bash
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install baidupay
+```bash
+$ gem install baidupay
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+在开始使用之前，需要准备 4 项配置：
 
-## Development
+1. DEAL_ID：跳转百度收银台支付必带参数之一，是百度收银台的财务结算凭证，与账号绑定的结算协议一一对应，每笔交易将结算到dealId对应的协议主体。
+2. APP_KEY：用以表示应用身份的唯一id，在应用审核通过后进行分配，一经分配后不会发生更改，来唯一确定一个应用。
+3. PUBLIC_KEY: 平台请求TP应用时，TP用于验签使用的公钥，在应用审核通过后分配，一经分配不会发生更改，每个应用对应不同的平台公钥。
+4. PRIVATE_KEY: 进行 RSA 签名计算时候需要用
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+建立一个客户端以便快速调用API：
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```ruby
+@client = Alipay::Client.new(
+  deal_id: DEAL_ID,
+  app_key: APP_KEY,
+  public_key: PUBLIC_KEY,
+  private_key: PRIVATE_KEY
+)
+```
 
-## Contributing
+计算签名：
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/baidupay. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+```ruby
+@client.sign(tp_order_id: 'NO129388445') #=> 'eKn5tjMLugCvU4nv9WjwIN7+AEb3l13fKUWqYMnQpkwmo+...'
+```
+
+验证异步通知：
+
+```ruby
+if @client.verify?(request.request_parameters)
+  render plain: 'success'
+end
+```
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Baidupay project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/baidupay/blob/master/CODE_OF_CONDUCT.md).

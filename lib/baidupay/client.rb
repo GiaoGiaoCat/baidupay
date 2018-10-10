@@ -10,22 +10,11 @@ module Baidupay
       @private_key = options['private_key']
     end
 
-    # Generate sign for params.
-    # Example:
-    #   baidupay_client.sign(tp_order_id: 'NO129388445') #=> 'eKn5tjMLugCvU4nv9WjwIN7+AEb3l13fKUWqYMnQpkwmo+...'
     def sign(params)
       string = params_to_string(prepare_params(params))
       ::Baidupay::Sign::RSA.sign(private_key, string)
     end
 
-    # Verify Baidupay notification.
-    # Example:
-    #   params = {
-    #     out_trade_no: '20160401000000',
-    #     trade_status: 'TRADE_SUCCESS'
-    #     rsaSign: '...'
-    #   }
-    #   alipay_client.verify?(params) #=> true / false
     def verify?(params)
       params = Utils.stringify_keys(params)
       sign = params.delete('rsaSign')
